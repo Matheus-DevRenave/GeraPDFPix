@@ -127,7 +127,6 @@ function generatePDF() {
 
   // Salva o PDF
   const pdfOutput = doc.output();
-  fs.writeFileSync("pix_payment.pdf", pdfOutput, "binary");
 
   // Converte o PDF para base64
   const base64 = Buffer.from(pdfOutput).toString("base64")
