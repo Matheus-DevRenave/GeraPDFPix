@@ -106,7 +106,7 @@ function generatePDF() {
 
   // Adicionando o QR Code
   const qrCodeX = (pageWidth - 60) / 2; // Centraliza horizontalmente
-  doc.addImage(qrCodeBase64, "PNG", qrCodeX, boxStartY + 15, 60, 60);
+  doc.addImage(`${qrCodeBase64}`, "PNG", qrCodeX, boxStartY + 15, 60, 60);
 
   // Desenha a Caixa do Pix Copia e Cola
   doc.setDrawColor(44, 38, 96);
@@ -125,14 +125,23 @@ function generatePDF() {
   doc.setFontSize(10);
   doc.text(mensagemRodape, 20, boxStartY + 125, { maxWidth: 170 });
 
-  // Salva o PDF
-  const pdfOutput = doc.output();
+  const pdfArraBuffer = doc.output("arraybuffer");
 
-  // Converte o PDF para base64
-  const base64 = Buffer.from(pdfOutput).toString("base64")
+  const pdfBase64 = arrayBufferToBase64(pdfArraBuffer);
 
-  console.log("PDF gerado com sucesso!");
-  return base64
+  console.log('PDF gerado com sucesso!');
+  return pdfBase64;
+}
+
+// Função para converter ArrayBuffer para Base64
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+  }
+  return Buffer.from(binary, 'binary').toString('base64'); // Converte para Base64
 }
 
 generatePDF();
